@@ -1,0 +1,107 @@
+<meta content='width=device-width, initial-scale=1' name='viewport'>
+<link href='https://fonts.googleapis.com/css?family=Roboto:300,300i,500,700,500i,900' rel='stylesheet' type='text/css' />
+<style>
+  li{margin:10px}
+</style>
+<ul id="feed-container"></ul>
+<div id="ok" style="font-size:18px">
+</div>
+<script>
+  function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split("=");
+      if (pair[0] == variable) {
+        return pair[1];
+      }
+    }
+    return (false);
+  }
+</script>
+<script type='text/javaScript'>
+  document.write;
+  var loadToc, loadCategories, _toc = {
+    init: function() {
+      var cfg = {
+          homePage: getQueryVariable("url"),
+          maxResults: 99999
+        },
+        w = window,
+        d = document,
+        el = function(id) {
+          return d.getElementById(id);
+        },
+        o = {
+          g: el('ok'),
+          h: d.getElementsByTagName('head')[0],
+          i: 0,
+          j: null,
+          k: 'published',
+          l: 0,
+          m: ""
+        },
+        fn = {
+          a: function() {
+            old = el('temporer-script');
+            old.parentNode.removeChild(old);
+          },
+          b: function(param) {
+            var script = d.createElement('script');
+            script.type = "text/javascript";
+            script.id = "temporer-script";
+            script.src = param;
+            if (el('temporer-script')) fn.a();
+            o.h.appendChild(script);
+          },
+          d: function(json) {
+            var _h;
+            if ("entry" in json.feed) {
+              var a = json.feed.entry,
+                b, c, _d, e = "0 Komentar",
+                f = "",
+                g;
+              for (var i = 0; i < cfg.maxResults; i++) {
+                if (i == a.length) break;
+                b = a[i].title.$t;
+                for (var j = 0, jen = a[i].link.length; j < jen; j++) {
+                  c = (a[i].link[j].rel == "alternate") ? a[i].link[j].href : "#";
+                }
+                for (var k = 0, ken = a[i].link.length; k < ken; k++) {
+                  if (a[i].link[k].rel == "replies" && a[i].link[k].type == "text/html") {
+                    e = a[i].link[k].title;
+                    break;
+                  }
+                }
+                _h = d.createElement('li');
+                _h.innerHTML = '<a class="toc-title" href="' + c + '" target="_blank" title="' + b + '">' + b + '</a>';
+                o.g.appendChild(_h);
+              }
+              _h = ''
+            } else {
+              _h = d.createElement('a');
+              _h.href = '#reset-content';
+              _h.innerHTML = cfg.resetToc;
+              _h.onclick = function() {
+                o.i = -1;
+                o.e.innerHTML = cfg.counting;
+                o.f.innerHTML = "";
+                fn.c(0, null, 'published');
+                o.a.innerHTML = o.a.innerHTML;
+                o.b.children[0].innerHTML = o.b.children[0].innerHTML;
+                return false;
+              };
+            }
+            o.g.appendChild(_h);
+            o.a.disabled = false;
+            o.b.children[0].disabled = false;
+          }
+        };
+      loadToc = fn.d;
+      loadCategories = fn.e;
+      fn.b(cfg.homePage + '/feeds/posts/summary?alt=json-in-script&start-index=' + (o.i + 1) + '&max-results=' + cfg.maxResults + '&orderby=published&callback=loadToc');
+
+    }
+  };
+  _toc.init();
+</script>
